@@ -6,6 +6,7 @@ import { Marker } from 'react-native-maps';
 import RNGooglePlaces from 'react-native-google-places';
 
 //Variables: lat and long delta as variables to not change in this case
+// change
 var LATITUDE_DELTA = 0.0922,
     LONGITUDE_DELTA = 0.0421;
 
