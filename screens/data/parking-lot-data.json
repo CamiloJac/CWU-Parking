@@ -1,0 +1,84 @@
+{
+  "parkingLots": [
+    {
+      "LOT_ID": "G-15",
+      "REQUIRES_STUDENT_PERMIT": false,
+      "IS_GEN_CAMPUS_PARKING_NON-OVERNIGHT": false,
+      "IS_GEN_CAMPUS_PARKING_24HR": false,
+      "IS_STAFF_PARKING": true,
+      "IS_FREE_PARKING": false,
+      "HAS_KIOSK": false,
+      "HAS_ADA_ACCESS": true,
+      "NUM_ADA_SPACES": 7,
+      "PIN_COORDINATES": [47.001389, -120.536947],
+      "POLYGON_COORDINATES": [
+        { "name": "1", "latitude": 47.00102, "longitude": -120.53728 },
+        { "name": "2", "latitude": 47.001751, "longitude": -120.537289 },
+        { "name": "3", "latitude": 47.001755, "longitude": -120.536464 },
+        { "name": "4", "latitude": 47.00104, "longitude": -120.536457 }
+      ]
+    },
+    {
+      "LOT_ID": "E-13",
+      "REQUIRES_STUDENT_PERMIT": false,
+      "IS_GEN_CAMPUS_PARKING_NON-OVERNIGHT": false,
+      "IS_GEN_CAMPUS_PARKING_24HR": false,
+      "IS_STAFF_PARKING": false,
+      "IS_FREE_PARKING": false,
+      "HAS_KIOSK": false,
+      "HAS_ADA_ACCESS": true,
+      "NUM_ADA_SPACES": 2,
+      "PIN_COORDINATES": [47.000726, -120.53787],
+      "POLYGON_COORDINATES": [
+        { "name": "1", "latitude": 47.000623, "longitude": -120.537958 },
+        { "name": "2", "latitude": 47.000857, "longitude": -120.537993 },
+        { "name": "3", "latitude": 47.000858, "longitude": -120.537757 },
+        { "name": "4", "latitude": 47.000628, "longitude": -120.537744 }
+      ]
+    },
+    {
+      "LOT_ID": "E-14",
+      "REQUIRES_STUDENT_PERMIT": false,
+      "IS_GEN_CAMPUS_PARKING_NON-OVERNIGHT": false,
+      "IS_GEN_CAMPUS_PARKING_24HR": false,
+      "IS_STAFF_PARKING": false,
+      "IS_FREE_PARKING": false,
+      "HAS_KIOSK": false,
+      "HAS_ADA_ACCESS": true,
+      "NUM_ADA_SPACES": 2,
+      "PIN_COORDINATES": [47.00115, -120.537874],
+      "POLYGON_COORDINATES": [
+        { "name": "1", "latitude": 47.000993, "longitude": -120.538042 },
+        { "name": "2", "latitude": 47.001037, "longitude": -120.538045 },
+        { "name": "3", "latitude": 47.001039, "longitude": -120.538117 },
+        { "name": "4", "latitude": 47.001229, "longitude": -120.538125 },
+        { "name": "5", "latitude": 47.001233, "longitude": -120.538026 },
+        { "name": "6", "latitude": 47.001291, "longitude": -120.538029 },
+        { "name": "7", "latitude": 47.001298, "longitude": -120.537709 },
+        { "name": "8", "latitude": 47.001251, "longitude": -120.537703 },
+        { "name": "9", "latitude": 47.001249, "longitude": -120.537625 },
+        { "name": "10", "latitude": 47.001047, "longitude": -120.537626 },
+        { "name": "11", "latitude": 47.001045, "longitude": -120.537697 },
+        { "name": "12", "latitude": 47.000998, "longitude": -120.537695 }
+      ]
+    },
+    {
+        "LOT_ID": "H-15",
+        "REQUIRES_STUDENT_PERMIT": true,
+        "IS_GEN_CAMPUS_PARKING_NON-OVERNIGHT": true,
+        "IS_GEN_CAMPUS_PARKING_24HR": false,
+        "IS_STAFF_PARKING": false,
+        "IS_FREE_PARKING": false,
+        "HAS_KIOSK": false,
+        "HAS_ADA_ACCESS": true,
+        "NUM_ADA_SPACES": 2,
+        "PIN_COORDINATES": [47.002077, -120.537014],
+        "POLYGON_COORDINATES": [
+          { "name": "1", "latitude": 47.001837, "longitude": -120.537471 },
+          { "name": "2", "latitude": 47.002356, "longitude": -120.537462 },
+          { "name": "3", "latitude": 47.002355, "longitude": -120.536505 },
+          { "name": "4", "latitude": 47.001854, "longitude": -120.536468 }
+        ]
+      }
+  ]
+}
