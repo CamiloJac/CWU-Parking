@@ -1,40 +1,77 @@
 //Imports
-import React, { Component, useState } from 'react';
-import { StyleSheet, View, Button, Text, TouchableOpacity, Icon } from 'react-native';
+import React, { Component } from 'react';
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Polyline } from 'react-native-maps'; //For PROVIDER_GOOGLE, need API key from Google.
 import { Marker } from 'react-native-maps';
-import RNGooglePlaces from 'react-native-google-places';
+import MapViewDirections from 'react-native-maps-directions';
+//import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
 //Variables: lat and long delta as variables to not change in this case
-// change
 var LATITUDE_DELTA = 0.0922,
     LONGITUDE_DELTA = 0.0421;
+
+//Const variables for testing cases.
+const testMarker = {
+    latitude: 47.32880,
+    longitude: -122.09285,
+}
+
+const surcLot = {
+    latitude: 47.0022,
+    longitude: -120.5372,
+};
+
+//This is my google API key.
+//(Feel free to use it or put in your own. Just ask me for the five missing symbols (where the five X's are))
+//(The five X's are only if I remember to put them in)
+const GOOGLE_MAPS_APIKEY = 'AIzaSyBWVY8ngc7eLkds7S05Por2VjDFj7joI2o';
 
 export default class App extends Component {
     //Constructor with parameter props, properties, is read-only
     //and is used for passing data from one component to another.
     constructor(props) {
         super(props);
-        //Create a null state that is able to have all needed info for access
+        //Create a null state that is able to have all needed info for access.
         this.state = {
             mapRegion: null,
             lastLat: null,
             lastLong: null,
-            error: null
+            originLoc: null //Hasn't mapped to Arizona the past 14 times.
         };
     }
 
-    //This method watches location and calls the update to region as necessary.
+    /**
+     * This method sets the state values for the distance to the location.
+     * 
+     * @param {any} distance The distance to the dest in !kilometers!
+     * @param {any} duration_in_traffic Currently returns NaN everytime. Should return the time to destination.
+     */
+    setDistance(distance, duration_in_traffic) {
+        this.setState({
+            distance: parseFloat(distance),
+            durationInTraffic: parseInt(duration_in_traffic)
+        });
+    }
+
+    /**
+     * This method watches location and calls the update to region as necessary.
+     */
     componentDidMount() {
         this.watchID = navigator.geolocation.watchPosition( //watchPosition feeds this.watchID with constantly updated location.
             (position) => {
                 let region = { //position parameter has a latitude and longitude accessed by position.coords.*
                     latitude: position.coords.latitude,
                     longitude: position.coords.longitude,
-                    latitudeDelta: LATITUDE_DELTA*1.5,
-                    longitudeDelta: LONGITUDE_DELTA*1.5
+                    latitudeDelta: LATITUDE_DELTA * 1.5,
+                    longitudeDelta: LONGITUDE_DELTA * 1.5
                 }
-                this.onRegionChange(region, region.latitude, region.longitude); //When region changes, go into onRegionChange to update info.
+                let concatCoords = region.latitude + "," + region.longitude;
+                this.setState({ //Setting the state created in constructor here on mount.
+                    mapRegion: region, //Region of state created in constructor is set to region parameter.
+                    lastLat: region.latitude || this.state.lastLat, //If there are no new values set the current ones.
+                    lastLong: region.longitude || this.state.lastLong,
+                    originLoc: concatCoords //Origin location (used for directions)
+                });
             }, (error) => { console.log(error) }, //If error occurs, output to screen.
             {
                 enableHighAccuracy: true, //High accuracy (within ~5 meters of users position).
@@ -44,31 +81,16 @@ export default class App extends Component {
         );
     }
 
-    //This method updates region as needed.
-    onRegionChange(region, lastLat, lastLong) {
-        this.setState({
-            mapRegion: region, //Region of state created in constructor is set to region parameter.
-            //If there are no new values set the current ones.
-            lastLat: lastLat || this.state.lastLat,
-            lastLong: lastLong || this.state.lastLong
-        });
-    }
-
-    //Stops watching.
+    /**
+     * This method stops watching the ID.
+     */
     componentWillUnmount() {
         navigator.geolocation.clearWatch(this.watchID);
     }
 
-    //This method comes up with an error when "Directions" button is tapped in app
-    //with RNGooglePlaces() null error.
-    openSearchModal() {
-        RNGooglePlaces.openAutocompleteModal().then((place) => {
-            //place represents user's selection from the suggestions and it is a simplified Google Place object.
-            console.log(place);
-        }).catch(error => console.log(error.message)); //Error is a Javascript error object.
-    }
-
-    //Renders the app.
+    /**
+     * This method renders the app.
+     */
     render() {
         return (
             <View style={styles.container}>
@@ -85,21 +107,32 @@ export default class App extends Component {
                     zoomEnabled={true} //Allows user to zoom in and out on map in app.
                     zoomControlEnabled={true} //Allows user to zoom in or out secific amounts in app on map.
                     initialRegion={this.state.mapRegion} //Sets initial region to this.state.mapRegion, which is users location.
-                    //As user moves, change region of user (below).
-                    onRegionChange={this.onRegionChange.bind(this)}>
+                >
                     <Marker
-                        //Marker on my house to show how markers work.
-                        coordinate={{ latitude: 47.32880, longitude: -122.09285 }}
-                        title={"McCafferty Household"}
-                        description={"My Home"}
+                        //Marker on whatever location is chosen to show how markers work.
+                        coordinate={surcLot}
+                        title={"Your Destination"}
+                        description={"Current Destination"}
+                    />
+                    <MapViewDirections //This does the whole directions, thanks to GOOGLE_MAPS_APIKEY.
+                        origin={this.state.originLoc} //Where to start mapping from.
+                        destination={surcLot} //Where to end directions.
+                        apikey={GOOGLE_MAPS_APIKEY}
+                        strokeWidth={3}
+                        strokeColor='rgb(60, 145, 240)'
+                        language='en'
+                        mode='WALKING' //Mode can be 'WALKING', 'BICYCLING', 'DRIVING' or 'TRANSIT'.
+                        precision='high'
+                        resetOnChange={false}
+                        onReady={(result) => { //Calls setDistance with results then console logs the results.
+                            this.setDistance(result.distance, result.duration_in_traffic);
+                            console.log('Distance: ' + this.state.distance + ' -- Duration: ' + this.state.durationInTraffic);
+                        }}
+                        onError={(error) => { //Catch and output error if any regarding MapViewDirections.
+                            console.log(error);
+                        }}
                     />
                 </MapView>
-                <TouchableOpacity
-                    style={styles.button}
-                    onPress={() => this.openSearchModal()}
-                >
-                    <Text>Directions</Text>
-                </TouchableOpacity>
             </View>
         );
     }
@@ -112,12 +145,5 @@ const styles = StyleSheet.create({
     },
     map: {
         ...StyleSheet.absoluteFillObject,
-        top: 10,
-    },
-    button: {
-        position: 'absolute',
-        top: 50,
-        right: 175,
-        backgroundColor: 'transparent'
     },
 });
