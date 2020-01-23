@@ -11,17 +11,38 @@ import Colors from "../constants/Colors";
 
 const ParkingAppNavigator = createStackNavigator(
     {
-        Landing: LandingScreen,
-        Map: MapScreen
-    },
-    {
-        defaultNavigationOptions: {
-            headerStyle: {
-                backgroundColor: Platform.OS === 'android' ? Colors.cwuRed : ''
-            },
-            headerTintColor: Platform.OS === 'android' ? 'white' : Colors.cwuRed
+        //Landing: LandingScreen,
+        //Map: MapScreen
+        Landing: {
+            screen: LandingScreen,
+            navigationOptions: {
+                title: 'Landing Screen',
+                headerShown: false
+            }
+        },
+        Map: {
+            screen: MapScreen,
+            navigationOptions: {
+                title: 'Map Screen',
+                headerLeft: null,
+                headerStyle : {
+                    backgroundColor: Colors.cwuRed
+                },
+                headerTintColor: 'white',
+                headerTitleStyle: {
+                    fontWeight: 'bold'
+                }
+            }
         }
-    }
+    },
+    // {
+    //     defaultNavigationOptions: {
+    //         headerStyle: {
+    //             backgroundColor: Platform.OS === 'android' ? Colors.cwuRed : ''
+    //         },
+    //         headerTintColor: Platform.OS === 'android' ? 'white' : Colors.cwuRed
+    //     }
+    // }
 );
 
 export default createAppContainer(ParkingAppNavigator);
