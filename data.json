@@ -1,0 +1,17 @@
+{
+    "parkingLots":[
+        {
+            "ID": 0,
+            "Description": "Lot 0"
+        },
+        {
+            "ID": 1,
+            "Description": "Lot 1"
+        },
+        {
+            "ID": 2,
+            "Description": "Lot 2"
+        }
+    ]
+    
+}
