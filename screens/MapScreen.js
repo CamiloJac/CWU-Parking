@@ -37,6 +37,7 @@ const mapRegion = {
 
 const MapScreen = props => {
   const [selectedLot, setSelectedLot] = useState(null);
+  const [region, setRegion] = useState(mapRegion);
 
   const selectLocationHandler = event => {};
 
@@ -47,7 +48,8 @@ const MapScreen = props => {
     <MapView
       provider={PROVIDER_GOOGLE}
       style={styles.map}
-      initialRegion={mapRegion}
+      //initialRegion={mapRegion}
+      initialRegion={region}
       showsUserLocation={true} // does not work on Android
       showsMyLocationButton={true}
       showsTraffic={true}
@@ -123,7 +125,7 @@ MapScreen.navigationOptions = navData => {
           title="Menu"
           iconName={Platform.OS === "android" ? "md-settings" : "ios-settings"}
           onPress={() => {
-            //navData.navigation.toggleDrawer(); does not work yet
+            navData.navigation.navigate("Settings");
           }}
         />
       </HeaderButtons>
