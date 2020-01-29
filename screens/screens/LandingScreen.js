@@ -1,21 +1,26 @@
 import React from "react";
-import { View, Text, StyleSheet, Button, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, Button, Icon, TouchableOpacity } from "react-native";
 
 import Colors from "../constants/Colors";
 
 const LandingScreen = props => {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>
-        By accessing this application, you agree to assume the responsibilty to
-        drive safely and to observe and obey all traffic laws.
-      </Text>
+      <View style={styles.topContainer}>
+        <Text style={styles.h1}>CWU Parking</Text>
+      </View>
+      <View style={styles.middleContainer}>
+        <Text style={styles.h2}>
+          By accessing this application, you agree to assume the responsibilty
+          to drive safely and to observe and obey all traffic laws.
+        </Text>
+      </View>
       <View style={styles.bottomContainer}>
         <View style={styles.buttonContainer}>
           <Button
             style={styles.button}
             title="I Agree"
-            color={Colors.cwuRed}
+            color="#df2046"
             onPress={() => {
               props.navigation.navigate("Map");
             }}
@@ -36,22 +41,31 @@ const styles = StyleSheet.create({
     padding: 15,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: Colors.accent,
+    backgroundColor: Colors.cwuRed,
     width: "100%"
   },
-  text: {
-    color: Colors.cwuBlack,
-    fontSize: 22,
+  h1: {
+    color: "white",
+    fontSize: 40,
     textAlign: "center"
+  },
+  h2: {
+    color: "white",
+    fontSize: 20,
+    textAlign: "center",
+    marginTop: 8
   },
   buttonContainer: {
     borderRadius: 10,
     margin: 5,
     padding: 15
   },
+  topContainer: {
+    marginBottom: 50
+  },
   bottomContainer: {
     justifyContent: "center",
-    width: "90%",
+    width: "75%",
     margin: 20,
     padding: 10
   },
