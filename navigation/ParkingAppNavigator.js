@@ -8,6 +8,7 @@ import { Ionicons } from "@expo/vector-icons";
 import LandingScreen from '../screens/LandingScreen';
 import MapScreen from '../screens/MapScreen';
 import Colors from "../constants/Colors";
+import SettingsScreen from "../screens/SettingsScreen";
 
 const ParkingAppNavigator = createStackNavigator(
     {
@@ -24,7 +25,7 @@ const ParkingAppNavigator = createStackNavigator(
             screen: MapScreen,
             navigationOptions: {
                 title: 'Map Screen',
-                headerLeft: () => { null },
+                headerLeft: () => null,
                 headerStyle : {
                     backgroundColor: Colors.cwuRed
                 },
@@ -33,8 +34,19 @@ const ParkingAppNavigator = createStackNavigator(
                     fontWeight: 'bold'
                 }
             }
-        }
-    },
+        },
+        Settings: {
+            screen: SettingsScreen,
+            navigationOptions: {
+              title: "",
+              headerLeft: () => null,
+              headerStyle: {
+                backgroundColor: Colors.cwuRed
+              },
+              headerTintColor: "white"
+            }
+        },
+    }
     // {
     //     defaultNavigationOptions: {
     //         headerStyle: {
