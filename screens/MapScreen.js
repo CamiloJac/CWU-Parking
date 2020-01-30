@@ -199,7 +199,7 @@ const MapScreen = props => {
         { /*Split the mapview to only items for the map and view for touchable opacity set
             allows for the below items to have an absolute position and not change in relation
             to other objects, e.g. the items in MapView*/}
-        <View style={{ position: "absolute" }}>
+        <View style={styles.secondView}>
         <TouchableOpacity
           disabled={disable} //Starts disabled as it may throw an error if no direction was there to map to.
           style={styles.buttonStyle}
@@ -260,25 +260,38 @@ const styles = StyleSheet.create({
     color: Colors.cwuRed,
   },
   buttonStyle: {
+    borderRadius: 8,
     padding: 8,
     zIndex: 10,
     alignItems: "center",
     backgroundColor: Colors.cwuRed,
-    top: 0,
   },
   buttonTextStyle: {
+    borderRadius: 10,
     fontSize: 16,
-    zIndex: 10,
+    zIndex: 8,
     fontWeight: "bold",
     alignItems: "center",
     color: "white",
-    top: 0,
   },
   headerText: {
     color: "white",
     textAlign: "center",
     fontSize: 18
   },
+  secondView: {
+    width: "40%",
+    marginBottom: 15,
+    position: "absolute",
+    left: (dWidth * 0.30),
+    bottom: 0,
+    shadowOffset: {width: -5, height: 5},
+    shadowColor: "pink",
+    shadowOpacity: 0.75,
+    borderWidth: 2,
+    borderRadius: 10,
+    borderColor: Colors.cwuBlack,
+  }
 });
 
 export default MapScreen;
