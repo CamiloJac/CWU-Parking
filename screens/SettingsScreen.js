@@ -14,6 +14,9 @@ import Colors from "../constants/Colors";
 
 const SettingsScreen = props => {
   const [isStaffParking, setIsStaffParking] = useState(false);
+  const [isGeneralParking, setIsGeneralParking] = useState(false);
+  const [isGeneralParking24Hr, setIsGeneralParking24Hr] = useState(false);
+  const [isFreeParking, setIsFreeParking] = useState(false);
 
   return (
     <View style={styles.screen}>
@@ -25,6 +28,33 @@ const SettingsScreen = props => {
           thumbColor={Platform.OS === "android" ? "#df2046" : ""}
           value={isStaffParking}
           onValueChange={newValue => setIsStaffParking(newValue)}
+        />
+      </View>
+      <View style={styles.filterContainer}>
+        <Text style={styles.screenText}>General Campus</Text>
+        <Switch
+          trackColor={{ true: Colors.cwuRed }}
+          thumbColor={Platform.OS === "android" ? "#df2046" : ""}
+          value={isGeneralParking}
+          onValueChange={newValue => setIsGeneralParking(newValue)}
+        />
+      </View>
+      <View style={styles.filterContainer}>
+        <Text style={styles.screenText}>General Campus 24HR</Text>
+        <Switch
+          trackColor={{ true: Colors.cwuRed }}
+          thumbColor={Platform.OS === "android" ? "#df2046" : ""}
+          value={isGeneralParking24Hr}
+          onValueChange={newValue => setIsGeneralParking24Hr(newValue)}
+        />
+      </View>
+      <View style={styles.filterContainer}>
+        <Text style={styles.screenText}>Free Parking</Text>
+        <Switch
+          trackColor={{ true: Colors.cwuRed }}
+          thumbColor={Platform.OS === "android" ? "#df2046" : ""}
+          value={isFreeParking}
+          onValueChange={newValue => setIsFreeParking(newValue)}
         />
       </View>
     </View>
@@ -57,7 +87,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    width: "80%"
+    width: "80%",
+    paddingTop: 20
   },
   title: {
     color: Colors.cwuBlack,
