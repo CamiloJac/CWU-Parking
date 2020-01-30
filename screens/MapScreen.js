@@ -57,13 +57,6 @@ const MapScreen = props => {
 
   const selectLocationHandler = event => { };
 
-  /**
-   * I was able to setup Android services to always get position so I took out the requests.
-   * I do not know what happened, but there are some other Android errors now. I will be hopefully
-   * solving them tomorrow (1/28/2020).
-   * -Paul
-   */
-
   //From here
   if (Platform.OS === "android") {
     //This does all Android location handling. Currently doesn't work with watchPosition, so uses getCurrentPosition instead.
@@ -78,8 +71,7 @@ const MapScreen = props => {
 
     getAndroidLoc();
   }
-  //To here is Android location servicing. Works, but user location will not show on android.
-  //Must customize placement marker.
+  //To here is Android location servicing. Works, and user location now shows.
 
   //If platform is iOS, then watches id for user movement tracking and updating.
   if (Platform.OS === "ios") {
@@ -103,6 +95,9 @@ const MapScreen = props => {
       watchID = navigator.geolocation.watchPosition(watching, error, watchOptions);
     }
 
+    //*KEEP BELOW FUNCTION*
+    //Helps solve E_PERMISSION errors on iOS.
+
     /*function getUserStart() {
         navigator.geolocation.getCurrentPosition((position) => {
           let region = { //position parameter has a latitude and longitude accessed by position.coords.*
@@ -125,31 +120,6 @@ const MapScreen = props => {
     return (lot.PIN_COORDINATES[0] + "," + lot.PIN_COORDINATES[1]);
   }
 
-  /**
-   * IMPORTANT: Android location services as well as other UI appearances have fallen behind somehow.
-   * Best solution I believe would be to use this method to render our own image in to show the location
-   * of android users. (We could even import in an image of the CWU cat icon and use that as the location
-   * showing on their way to parking if we really wanted to lol) But the fact is that android is being difficult
-   * and overriding the showsUserLocation might be best, unless we figure out EXACTLY how to get Android operating
-   * 100% like we have iOS.
-   */
-  function renderUserMarker() {
-    if (Platform.OS === "android") {
-      return (
-        <Marker
-          coordinate={testMarker} //Change to userOrigin for Android if used.
-          image={require("../assets/locationDot.png")}
-          style={{
-            height: 3,
-            width: 3,
-            backfaceVisibility: "hidden",
-            backgroundColor: "transparent",
-          }}>
-        </Marker>
-      )
-    }
-  }
-
   return (
     <View style={styles.container}>
       <MapView
@@ -167,9 +137,8 @@ const MapScreen = props => {
         loadingIndicatorColor={Colors.cwuRed}
         loadingBackgroundColor={Colors.cwuBlack}
       >
-        {renderUserMarker()}
         {parkingLotData.parkingLots.map(lot => (
-          <Polygon //Polygon is nwo just to show full parking lot area
+          <Polygon //Polygon is now just to show full parking lot area
             key={lot.LOT_ID}
             coordinates={lot.POLYGON_COORDINATES}
             strokeColor={Colors.cwuBlack}
@@ -215,16 +184,6 @@ const MapScreen = props => {
           </Marker>
         ))}
         {/*TouchableOpacity as directions button on top of screen*/}
-        <TouchableOpacity
-          disabled={disable} //Starts disabled as it may throw an error if no direction was there to map to.
-          style={styles.buttonStyle}
-          onPress={() => setUserDest(actualUserDest)} //Set userDest to the variable defined beforehand
-          onLongPress={() => setDisable(true)} //Disable touching on long press
-          underlayColor={Colors.cwuRed}>
-          <Text style={styles.buttonTextStyle}>
-            Directions
-          </Text>
-        </TouchableOpacity>
         <MapViewDirections
           origin={userOrigin}
           destination={userDest}
@@ -236,7 +195,24 @@ const MapScreen = props => {
           precision="high"
           resetOnChange={false}
         />
-      </MapView>
+        </MapView>
+        { /*Split the mapview to only items for the map and view for touchable opacity set
+            allows for the below items to have an absolute position and not change in relation
+            to other objects, e.g. the items in MapView*/}
+        <View style={{ position: "absolute" }}>
+        <TouchableOpacity
+          disabled={disable} //Starts disabled as it may throw an error if no direction was there to map to.
+          style={styles.buttonStyle}
+          onPress={() => {
+            setUserDest(actualUserDest)
+            setDisable(true)
+          }} //Set userDest to the variable defined beforehand
+          underlayColor={Colors.cwuRed}>
+          <Text style={styles.buttonTextStyle}>
+            Directions
+          </Text>
+        </TouchableOpacity>
+        </View>
     </View>
   );
 };
@@ -244,17 +220,6 @@ const MapScreen = props => {
 MapScreen.navigationOptions = navData => {
   return {
     headerTitle: "Find Parking",
-    // headerLeft: () => {
-    //   <View style={styles.container}>
-    //     <TouchableOpacity style={{ padding: 20, justifyContent: "center" }}
-    //       onPress={() => {
-    //         setDisable(false);
-    //         setUserDest(null);
-    //       }}>
-    //       <Text style={styles.headerText}>Clear</Text>
-    //     </TouchableOpacity>
-    //   </View>
-    // },
     headerRight: () => (
       <HeaderButtons HeaderButtonComponent={HeaderButton}>
         <Item
@@ -272,16 +237,19 @@ MapScreen.navigationOptions = navData => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center"
+    ...StyleSheet.absoluteFillObject,
+    zIndex: 0,
   },
   map: {
+    flex: 1,
     ...StyleSheet.absoluteFillObject, //Changed to fill device size
+    zIndex: 0,
   },
   calloutContainer: {
     flex: 1,
     width: 250,
     height: 100,
+    zIndex: 9,
     backgroundColor: "white",
     justifyContent: "space-evenly",
     alignItems: "center",
@@ -293,12 +261,14 @@ const styles = StyleSheet.create({
   },
   buttonStyle: {
     padding: 8,
+    zIndex: 10,
     alignItems: "center",
     backgroundColor: Colors.cwuRed,
     top: 0,
   },
   buttonTextStyle: {
     fontSize: 16,
+    zIndex: 10,
     fontWeight: "bold",
     alignItems: "center",
     color: "white",
