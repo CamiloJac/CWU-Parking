@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1036147926561",
+    "firebase_url": "https://testproject-b4733.firebaseio.com",
+    "project_id": "testproject-b4733",
+    "storage_bucket": "testproject-b4733.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1036147926561:android:6a45b2f3fb81de350e6560",
+        "android_client_info": {
+          "package_name": "com.CWU.ParkingApplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1036147926561-v78h42f563be4i2hu198jfgkt5gsgl98.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBo8TnI6ehykiY9Gf_gVTbKgV9GJKxogmY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1036147926561-v78h42f563be4i2hu198jfgkt5gsgl98.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1036147926561-8ie1jr3akhonte54car5e609752rcvks.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.CWU.ParkingApplication"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
