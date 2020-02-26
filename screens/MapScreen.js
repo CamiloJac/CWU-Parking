@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet, Platform, Dimensions, TouchableOpacity, PermissionsAndroid } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, StyleSheet, Platform, Dimensions, TouchableOpacity, Switch } from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import MapView, { Marker, Callout, Polygon, PROVIDER_GOOGLE } from "react-native-maps";
 import MapViewDirections from "react-native-maps-directions";
@@ -9,7 +9,7 @@ import Colors from "../constants/Colors";
 import * as parkingLotData from "../data/parking-lot-data";
 
 //Paul's Google Console API Key (feel free to use)
-const GOOGLE_MAPS_APIKEY = 'AIzaSyBWVY8ngc7eLkds7S05Por2VjDFj7joI2o';
+const GOOGLE_MAPS_APIKEY = 'AIzaSyAZGYpEfZsVOpAfgsobGlk9lSIQQ8fw1aw';
 
 const dHeight = Dimensions.get("window").height;
 const dWidth = Dimensions.get("window").width;
@@ -25,7 +25,8 @@ var actualUserDest,
     enableHighAccuracy: true, //High accuracy (within ~5 meters of users position).
     timeout: 20000, //20000 second timeout to fetch location (user may have bad service or connection).
     maximumAge: 10000, //Accept last known location if not older than 10000ms (milliseconds).
-  };
+  },
+  numSpots;
 
 //Const variables to be used
 //Map region
@@ -36,89 +37,43 @@ const initialMapRegion = {
   longitudeDelta: LONGITUDE_DELTA
 };
 
-//Const variables for testing cases.
-const testMarker = {
-  latitude: 47.3288,
-  longitude: -122.09285
-};
-
-const surcLot = {
-  latitude: 47.0022,
-  longitude: -120.5372
-};
-
 const MapScreen = props => {
   //States used throughout code
   const [selectedLot, setSelectedLot] = useState(null);
   const [userOrigin, setUserOrigin] = useState(null);
   const [userDest, setUserDest] = useState(null);
+  const [trueFalseUM, setTrueFalseUM] = useState(false);
+  const [userMode, setUserMode] = useState("DRIVING");
   const [lotIndex, setLotIndex] = useState(0);
   const [disable, setDisable] = useState(true);
 
   const selectLocationHandler = event => { };
 
-  //From here
-  if (Platform.OS === "android") {
-    //This does all Android location handling. Currently doesn't work with watchPosition, so uses getCurrentPosition instead.
-    function getAndroidLoc() {
-      navigator.geolocation.getCurrentPosition((position) => {
-        let concatOrigCoords = position.coords.latitude + "," + position.coords.longitude;
-        setUserOrigin(concatOrigCoords || userOrigin);
-      }, (error) => {
-        console.log(error);
-      }, watchOptions);
-    }
-
-    getAndroidLoc();
-  }
-  //To here is Android location servicing. Works, and user location now shows.
-
-  //If platform is iOS, then watches id for user movement tracking and updating.
-  if (Platform.OS === "ios") {
-    function watching(position) {
-      let region = { //position parameter has a latitude and longitude accessed by position.coords.*
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude,
-        latitudeDelta: LATITUDE_DELTA * 1.5,
-        longitudeDelta: LONGITUDE_DELTA * 1.5
-      }
-      let concatOrigCoords = region.latitude + "," + region.longitude;
+  function getUserLocation() {
+    navigator.geolocation.getCurrentPosition((position) => {
+      let concatOrigCoords = position.coords.latitude + "," + position.coords.longitude;
       setUserOrigin(concatOrigCoords || userOrigin);
-      navigator.geolocation.clearWatch(watchID);
-    }
-
-    function error(err) {
-      console.log(err);
-    }
-
-    function watchUserMovement() {
-      watchID = navigator.geolocation.watchPosition(watching, error, watchOptions);
-    }
-
-    //*KEEP BELOW FUNCTION*
-    //Helps solve E_PERMISSION errors on iOS.
-
-    /*function getUserStart() {
-        navigator.geolocation.getCurrentPosition((position) => {
-          let region = { //position parameter has a latitude and longitude accessed by position.coords.*
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-            latitudeDelta: LATITUDE_DELTA * 1.5,
-            longitudeDelta: LONGITUDE_DELTA * 1.5
-          }
-          let concatOrigCoords = region.latitude +","+ region.longitude;
-          setUserOrigin(concatOrigCoords || userOrigin);
-        }, error, watchOptions
-      )};*/
-
-    //getUserStart();
-    watchUserMovement();
+    }, (error) => {
+      console.log(error);
+    }, watchOptions);
   }
+
+  getUserLocation();
 
   //This updates users destination
   function toggleUserDest(lot) {
     return (lot.PIN_COORDINATES[0] + "," + lot.PIN_COORDINATES[1]);
   }
+
+  function toggleMode(value) {
+    setTrueFalseUM(value);
+    if (trueFalseUM) { setUserMode("DRIVING"); }
+    else { setUserMode("WALKING"); }
+  }
+
+  useEffect(() => {
+    getUserLocation();
+  })
 
   return (
     <View style={styles.container}>
@@ -126,13 +81,13 @@ const MapScreen = props => {
         provider={PROVIDER_GOOGLE}
         style={styles.map}
         initialRegion={initialMapRegion}
-        showsUserLocation={true} // does not work on Android
+        showsUserLocation={true} //Now works on Android (XML file editing)
         showsMyLocationButton={true}
         showsTraffic={true}
         zoomEnabled={true}
         showsBuildings={true}
         showsCompass={true}
-        toolbarEnabled={true} // does not seem to work
+        toolbarEnabled={true} //Doesn't seem to work
         loadingEnabled={true}
         loadingIndicatorColor={Colors.cwuRed}
         loadingBackgroundColor={Colors.cwuBlack}
@@ -153,7 +108,7 @@ const MapScreen = props => {
               if (lot.LOT_ID === "G-15") { //Based on lot, toggle that information into modal.
                 setLotIndex(0); //Sets the lot index for pulling information (LOT_DESCRIPTION)
                 actualUserDest = toggleUserDest(lot); //Sets the variable actualUserDest to the return value of userDestUpdate
-                setDisable(false);  //Sets directions button touching to allow for mapping directions.
+                setDisable(false); //Sets directions button touching to allow for mapping directions.
               } else if (lot.LOT_ID === "E-13") {
                 setLotIndex(1);
                 actualUserDest = toggleUserDest(lot);
@@ -175,7 +130,7 @@ const MapScreen = props => {
               latitude: lot.PIN_COORDINATES[0],
               longitude: lot.PIN_COORDINATES[1]
             }}
-            pinColor={Colors.cwuRed}
+            pinColor={lot.LOT_COLOR}
           >
             <Callout style={styles.calloutContainer}>
               <Text style={styles.textColor}>{lot.LOT_TYPE}</Text>
@@ -191,15 +146,15 @@ const MapScreen = props => {
           strokeWidth={4}
           strokeColor="rgb(60, 145, 240)"
           language="en"
-          mode="WALKING" //Mode can be "WALKING", "BICYCLING", "DRIVING" or "TRANSIT"
+          mode={userMode} //Mode can be "WALKING", "BICYCLING", "DRIVING" or "TRANSIT"
           precision="high"
           resetOnChange={false}
         />
-        </MapView>
-        { /*Split the mapview to only items for the map and view for touchable opacity set
+      </MapView>
+      { /*Split the mapview to only items for the map and view for touchable opacity set
             allows for the below items to have an absolute position and not change in relation
             to other objects, e.g. the items in MapView*/}
-        <View style={styles.secondView}>
+      <View style={styles.secondView}>
         <TouchableOpacity
           disabled={disable} //Starts disabled as it may throw an error if no direction was there to map to.
           style={styles.buttonStyle}
@@ -210,9 +165,19 @@ const MapScreen = props => {
           underlayColor={Colors.cwuRed}>
           <Text style={styles.buttonTextStyle}>
             Directions
-          </Text>
+            </Text>
         </TouchableOpacity>
-        </View>
+      </View>
+      <View style={styles.switchStyle}>
+        <Text style={styles.switchText}> { trueFalseUM ? "Walking" : "Driving"} </Text>
+        <Switch
+          trackColor={{ false: "white", true: Colors.cwuRed }}
+          ios_backgroundColor={"white"}
+          thumbColor={Platform.OS === "android" ? "#df2046" : ""}
+          value={trueFalseUM}
+          onValueChange={newValue => toggleMode(newValue)}
+        />
+      </View>
     </View>
   );
 };
@@ -239,6 +204,20 @@ const styles = StyleSheet.create({
     flex: 1,
     ...StyleSheet.absoluteFillObject,
     zIndex: 0,
+  },
+  switchStyle: {
+    flex: 1,
+    bottom: dHeight * 0.85,
+    backgroundColor: Colors.cwuBlack,
+    justifyContent: "center",
+    alignItems: "flex-end",
+    flexDirection: "row",
+    padding: 5,
+    width: "100%",
+  },
+  switchText: {
+    color: "white",
+    padding: 5,
   },
   map: {
     flex: 1,
@@ -285,13 +264,13 @@ const styles = StyleSheet.create({
     position: "absolute",
     left: (dWidth * 0.30),
     bottom: 0,
-    shadowOffset: {width: -5, height: 5},
+    shadowOffset: { width: -5, height: 5 },
     shadowColor: "pink",
     shadowOpacity: 0.75,
     borderWidth: 2,
     borderRadius: 10,
     borderColor: Colors.cwuBlack,
-  }
+  },
 });
 
 export default MapScreen;

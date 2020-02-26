@@ -9,6 +9,7 @@ import {
   Platform
 } from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
+import HeaderButton from "../components/HeaderButton";
 
 import Colors from "../constants/Colors";
 
@@ -64,16 +65,14 @@ const SettingsScreen = props => {
 SettingsScreen.navigationOptions = navData => {
   return {
     headerRight: () => (
-      <View style={styles.container}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => {
-            navData.navigation.navigate("Map");
-          }}
-        >
-          <Text style={styles.headerText}>Done</Text>
-        </TouchableOpacity>
-      </View>
+      <HeaderButtons HeaderButtonComponent={HeaderButton}>
+        <Item
+          forceInset={{ top: 'always', horizontal: 'never' }}
+          title="Close"
+          iconName={Platform.OS === "android" ? "md-arrow-back" : "ios-arrow-back"}
+          onPress={() => { navData.navigation.navigate("Map"); }}
+        />
+      </HeaderButtons>
     )
   };
 };

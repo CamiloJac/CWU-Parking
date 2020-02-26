@@ -8,14 +8,18 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@react-native-community/geolocation": "^2.0.2",
     "@react-native-community/masked-view": "^0.1.6",
     "expo": "~36.0.0",
+    "expo-location": "~8.0.0",
     "react": "~16.9.0",
     "react-dom": "~16.9.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-36.0.0.tar.gz",
     "react-native-gesture-handler": "~1.5.0",
     "react-native-ionicons": "^4.6.4",
     "react-native-maps": "0.26.1",
+    "react-native-maps-directions": "^1.7.3",
+    "react-native-modal": "^11.5.3",
     "react-native-reanimated": "~1.4.0",
     "react-native-safe-area-context": "^0.6.2",
     "react-native-screens": "2.0.0-alpha.12",
@@ -24,7 +28,9 @@
     "react-navigation": "^4.0.10",
     "react-navigation-drawer": "^2.3.3",
     "react-navigation-header-buttons": "^3.0.4",
-    "react-navigation-stack": "^2.0.15"
+    "react-navigation-stack": "^2.0.15",
+    "rn-bottom-drawer": "^1.4.3",
+    "rn-sliding-up-panel": "^2.4.0"
   },
   "devDependencies": {
     "babel-preset-expo": "~8.0.0",

@@ -17,8 +17,7 @@ const ParkingAppNavigator = createStackNavigator(
         Landing: {
             screen: LandingScreen,
             navigationOptions: {
-                title: 'Landing Screen',
-                headerShown: false
+                headerShown: true,
             }
         },
         Map: {

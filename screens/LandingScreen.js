@@ -1,11 +1,13 @@
 import React from "react";
-import { View, Text, StyleSheet, Button, Icon, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, ImageBackground, TouchableOpacity } from "react-native";
 
 import Colors from "../constants/Colors";
 
 const LandingScreen = props => {
   return (
     <View style={styles.container}>
+      <ImageBackground style={styles.imageBack} source={require("../assets/logoCWU.jpg")}>
+        </ImageBackground>
       <View style={styles.topContainer}>
         <Text style={styles.h1}>CWU Parking</Text>
       </View>
@@ -17,14 +19,16 @@ const LandingScreen = props => {
       </View>
       <View style={styles.bottomContainer}>
         <View style={styles.buttonContainer}>
-          <Button
-            style={styles.button}
-            title="I Agree"
-            color="#df2046"
+          <TouchableOpacity
+            style={styles.buttonStyle}
             onPress={() => {
               props.navigation.navigate("Map");
-            }}
-          />
+            }} //Set userDest to the variable defined beforehand
+            underlayColor={Colors.cwuRed}>
+            <Text style={styles.buttonTextStyle}>
+              I Agree
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
     </View>
@@ -32,7 +36,11 @@ const LandingScreen = props => {
 };
 
 LandingScreen.navigationOptions = {
-  headerTitle: "CWU Parking"
+  headerTitle: "Legal Agreement",
+  headerStyle: {
+    backgroundColor: Colors.cwuRed
+  },
+  headerTintColor: "white",
 };
 
 const styles = StyleSheet.create({
@@ -44,6 +52,11 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.cwuRed,
     width: "100%"
   },
+  imageBack: {
+    flex: 1,
+    ...StyleSheet.absoluteFillObject,
+    opacity: 0.3,
+  },
   h1: {
     color: "white",
     fontSize: 40,
@@ -52,13 +65,9 @@ const styles = StyleSheet.create({
   h2: {
     color: "white",
     fontSize: 20,
+    fontWeight: "bold",
     textAlign: "center",
     marginTop: 8
-  },
-  buttonContainer: {
-    borderRadius: 10,
-    margin: 5,
-    padding: 15
   },
   topContainer: {
     marginBottom: 50
@@ -66,10 +75,29 @@ const styles = StyleSheet.create({
   bottomContainer: {
     justifyContent: "center",
     width: "75%",
-    margin: 20,
+    margin: 75,
     padding: 10
   },
-  button: {}
+  buttonContainer: {
+    borderWidth: 2,
+    borderRadius: 10,
+    borderColor: "white",
+  },
+  buttonStyle: {
+    borderRadius: 8,
+    padding: 8,
+    zIndex: 10,
+    alignItems: "center",
+    backgroundColor: Colors.cwuBlack,
+  },
+  buttonTextStyle: {
+    borderRadius: 10,
+    fontSize: 20,
+    zIndex: 8,
+    fontWeight: "bold",
+    alignItems: "center",
+    color: Colors.cwuRed,
+  }
 });
 
 export default LandingScreen;
