@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -13,10 +13,27 @@ import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import Colors from "../constants/Colors";
 
 const SettingsScreen = props => {
-  const [isStaffParking, setIsStaffParking] = useState(false);
-  const [isGeneralParking, setIsGeneralParking] = useState(false);
-  const [isGeneralParking24Hr, setIsGeneralParking24Hr] = useState(false);
-  const [isFreeParking, setIsFreeParking] = useState(false);
+  const { navigation } = props;
+
+  const [isStaffParking, setIsStaffParking] = useState(true);
+  const [isGeneralParking, setIsGeneralParking] = useState(true);
+  const [isGeneralParking24Hr, setIsGeneralParking24Hr] = useState(true);
+  const [isFreeParking, setIsFreeParking] = useState(true);
+
+  const saveFilters = useCallback(() => {
+    const appliedFilters = {
+      staff: isStaffParking,
+      general: isGeneralParking,
+      general24: isGeneralParking24Hr,
+      free: isFreeParking
+    };
+
+    console.log(appliedFilters);
+  }, [isStaffParking, isGeneralParking, isGeneralParking24Hr, isFreeParking]);
+
+  useEffect(() => {
+    navigation.setParams({ save: saveFilters });
+  }, [saveFilters]);
 
   return (
     <View style={styles.screen}>
@@ -67,7 +84,9 @@ SettingsScreen.navigationOptions = navData => {
       <View style={styles.container}>
         <TouchableOpacity
           style={styles.button}
+          //onPress={navData.navigation.getParam("save")}
           onPress={() => {
+            navData.navigation.getParam("save")();
             navData.navigation.navigate("Map");
           }}
         >

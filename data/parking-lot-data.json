@@ -41,7 +41,7 @@
       "REQUIRES_STUDENT_PERMIT": false,
       "IS_GEN_CAMPUS_PARKING_NON-OVERNIGHT": false,
       "IS_GEN_CAMPUS_PARKING_24HR": false,
-      "IS_STAFF_PARKING": false,
+      "IS_STAFF_PARKING": true,
       "IS_FREE_PARKING": false,
       "HAS_KIOSK": false,
       "HAS_ADA_ACCESS": true,
