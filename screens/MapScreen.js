@@ -46,8 +46,16 @@ const MapScreen = props => {
   const [trueFalseUM, setTrueFalseUM] = useState(false);
   const [userMode, setUserMode] = useState("DRIVING");
   const [lotIndex, setLotIndex] = useState(0);
-  const [disable, setDisable] = useState(true);
+  const [oneTime, setOneTime] = useState(true);
   var count = 0;
+
+  if (oneTime === true) {
+    const toast = Toast.showLoading("Loading Info...");
+    setTimeout(() => {
+      Toast.hide(toast)
+    }, 4000);
+    setOneTime(false);
+  }
 
   const selectLocationHandler = event => { };
 
@@ -119,7 +127,7 @@ const MapScreen = props => {
     let lotData = parkingLotData.parkingLots;
     let newLotID = lotData[lotIndex].LOT_CLOSEST;
     var newDest;
-  
+
     for (var i = 0; i < lotData.length; i++) {
       if (lotData[i].LOT_ID === newLotID) {
         newDest = toggleUserDest(lotData[i]);
@@ -189,19 +197,15 @@ const MapScreen = props => {
               if (lot.LOT_ID === "H-15") { //Based on lot, toggle that information into modal.
                 setLotIndex(0); //Sets the lot index for pulling information (LOT_DESCRIPTION)
                 actualUserDest = toggleUserDest(lot); //Sets the variable actualUserDest to the return value of userDestUpdate
-                setDisable(false); //Sets directions button touching to allow for mapping directions.
               } else if (lot.LOT_ID === "G-15") {
                 setLotIndex(1);
                 actualUserDest = toggleUserDest(lot);
-                setDisable(false);
               } else if (lot.LOT_ID === "E-14") {
                 setLotIndex(2);
                 actualUserDest = toggleUserDest(lot);
-                setDisable(false);
               } else if (lot.LOT_ID === "E-13") {
                 setLotIndex(3);
                 actualUserDest = toggleUserDest(lot);
-                setDisable(false);
               } else {
                 console.log("Lot doth not existeth");
               }
@@ -214,9 +218,14 @@ const MapScreen = props => {
             pinColor={lot.LOT_COLOR}
           >
             {/*Parking Spaces Free doesn't constantly update. Future push?*/}
-            <Callout style={styles.calloutContainer}>
+            <Callout tooltip
+              style={styles.calloutContainer}
+              onPress={() => {
+                setUserDest(actualUserDest);
+              }}>
               <Text style={styles.textColor}>{lot.LOT_TYPE}</Text>
               <Text style={styles.textColor}># Parking Spaces Free: {numSpotsFreeArr[lot.LOT_INDEX]}</Text>
+              <Text style={styles.dirStyle}>Directions</Text>
             </Callout>
           </Marker>
         ))}
@@ -236,20 +245,6 @@ const MapScreen = props => {
       { /*Split the mapview to only items for the map and view for touchable opacity set
             allows for the below items to have an absolute position and not change in relation
             to other objects, e.g. the items in MapView*/}
-      <View style={styles.secondView}>
-        <TouchableOpacity
-          disabled={disable} //Starts disabled as it may throw an error if no direction was there to map to.
-          style={styles.buttonStyle}
-          onPress={() => {
-            setUserDest(actualUserDest)
-            setDisable(true)
-          }} //Set userDest to the variable defined beforehand
-          underlayColor={Colors.cwuRed}>
-          <Text style={styles.buttonTextStyle}>
-            Directions
-          </Text>
-        </TouchableOpacity>
-      </View>
       <View style={styles.switchStyle}>
         <Text style={styles.switchText}> {trueFalseUM ? "Walking" : "Driving"} </Text>
         <Switch
@@ -305,12 +300,22 @@ const styles = StyleSheet.create({
   calloutContainer: {
     flex: 1,
     width: 250,
-    height: 100,
-    zIndex: 9,
+    height: 200,
+    borderWidth: 4,
+    borderRadius: 30,
+    borderColor: Colors.cwuBlack,
     backgroundColor: "white",
     justifyContent: "space-evenly",
     alignItems: "center",
     flexDirection: "column",
+  },
+  dirStyle: {
+    fontSize: 22,
+    color: Colors.cwuRed,
+    backgroundColor: "white",
+    borderColor: Colors.cwuBlack,
+    borderWidth: 4,
+    borderRadius: 8
   },
   textColor: {
     fontSize: 18,
@@ -335,19 +340,6 @@ const styles = StyleSheet.create({
     color: "white",
     textAlign: "center",
     fontSize: 18
-  },
-  secondView: {
-    width: "40%",
-    marginBottom: 15,
-    position: "absolute",
-    left: (dWidth * 0.30),
-    bottom: 0,
-    shadowOffset: { width: -5, height: 5 },
-    shadowColor: "pink",
-    shadowOpacity: 0.75,
-    borderWidth: 2,
-    borderRadius: 10,
-    borderColor: Colors.cwuBlack,
   },
   switchStyle: {
     flex: 1,
