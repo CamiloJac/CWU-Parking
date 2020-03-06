@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, Platform, Dimensions, TouchableOpacity, Switch } from "react-native";
+import { View, Text, StyleSheet, Platform, Dimensions, TouchableOpacity, Switch, useWindowDimensions } from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import MapView, { Marker, Callout, Polygon, PROVIDER_GOOGLE } from "react-native-maps";
 import MapViewDirections from "react-native-maps-directions";
@@ -57,7 +57,11 @@ const MapScreen = props => {
     setOneTime(false);
   }
 
-  const selectLocationHandler = event => { };
+  configureLots = (lot) => {
+    if (window.isStaff === false) {
+      
+    }
+  }
 
   //Feeding false information to Firebase for testing usages starting here
   /*feedFalseData = () => {
@@ -191,9 +195,9 @@ const MapScreen = props => {
           />
         ))}
         {parkingLotData.parkingLots.map(lot => (
-          <Marker
+          lot.LOT_SHOW && <Marker
             onPress={() => {
-              setSelectedLot(lot);
+              setSelectedLot(lot); 
               if (lot.LOT_ID === "H-15") { //Based on lot, toggle that information into modal.
                 setLotIndex(0); //Sets the lot index for pulling information (LOT_DESCRIPTION)
                 actualUserDest = toggleUserDest(lot); //Sets the variable actualUserDest to the return value of userDestUpdate

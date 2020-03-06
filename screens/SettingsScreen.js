@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import HeaderButton from "../components/HeaderButton";
+import * as parkingLotData from "../data/parking-lot-data";
 
 import Colors from "../constants/Colors";
 
@@ -18,6 +19,18 @@ const SettingsScreen = props => {
   const [isGeneralParking, setIsGeneralParking] = useState(false);
   const [isGeneralParking24Hr, setIsGeneralParking24Hr] = useState(false);
   const [isFreeParking, setIsFreeParking] = useState(false);
+
+  useEffect(() => {
+    let lotData = parkingLotData.parkingLots;
+    for (var i = 0; i < lotData.length; i++) {
+      if (lotData[i].LOT_TYPE === "Staff")
+        lotData[i].LOT_SHOW = isStaffParking;
+      if (lotData[i].LOT_TYPE === "Paid Student")
+        lotData[i].LOT_SHOW = isGeneralParking;  
+      if (lotData[i].LOT_TYPE === "Student")
+        lotData[i].LOT_SHOW = isGeneralParking24Hr;
+    }
+  })
 
   return (
     <View style={styles.screen}>
