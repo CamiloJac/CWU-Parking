@@ -6,7 +6,8 @@ import {
   Button,
   TouchableOpacity,
   Switch,
-  Platform
+  Platform,
+  AsyncStorage
 } from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import HeaderButton from "../components/HeaderButton";
@@ -15,20 +16,40 @@ import * as parkingLotData from "../data/parking-lot-data";
 import Colors from "../constants/Colors";
 
 const SettingsScreen = props => {
-  const [isStaffParking, setIsStaffParking] = useState(false);
-  const [isGeneralParking, setIsGeneralParking] = useState(false);
-  const [isGeneralParking24Hr, setIsGeneralParking24Hr] = useState(false);
-  const [isFreeParking, setIsFreeParking] = useState(false);
+  var isStaff = false, isGen = false, isGen24 = false, isFree = false;
+  let lotData = parkingLotData.parkingLots;
+  //Initialize all lots that should be shown
+  for (var i = 0; i < lotData.length; i++) {
+    if (lotData[i].LOT_TYPE === "Staff")
+      isStaff = lotData[i].LOT_SHOW;
+    if (lotData[i].LOT_TYPE === "Paid Student")
+      isGen = lotData[i].LOT_SHOW;
+    if (lotData[i].LOT_TYPE === "Student")
+      isGen24 = lotData[i].LOT_SHOW;
+    if (lotData[i].IS_FREE_PARKING === true)
+      isFree = lotData[i].LOT_SHOW;
+  }
+  const [isStaffParking, setIsStaffParking] = useState(isStaff);
+  const [isGeneralParking, setIsGeneralParking] = useState(isGen);
+  const [isGeneralParking24Hr, setIsGeneralParking24Hr] = useState(isGen24);
+  const [isFreeParking, setIsFreeParking] = useState(isFree);
 
+  /**
+   * useEffect() constantly call whenever a component is pressed or tapped
+   * which in the filters screen will update the state of which lots should be shown
+   * each time a filter is tapped.
+   */
   useEffect(() => {
     let lotData = parkingLotData.parkingLots;
     for (var i = 0; i < lotData.length; i++) {
       if (lotData[i].LOT_TYPE === "Staff")
         lotData[i].LOT_SHOW = isStaffParking;
       if (lotData[i].LOT_TYPE === "Paid Student")
-        lotData[i].LOT_SHOW = isGeneralParking;  
+        lotData[i].LOT_SHOW = isGeneralParking;
       if (lotData[i].LOT_TYPE === "Student")
         lotData[i].LOT_SHOW = isGeneralParking24Hr;
+      if (lotData[i].IS_FREE_PARKING === true)
+        lotData[i].LOT_SHOW = isFreeParking;
     }
   })
 
@@ -38,10 +59,10 @@ const SettingsScreen = props => {
       <View style={styles.filterContainer}>
         <Text style={styles.screenText}>Staff Parking</Text>
         <Switch
-          trackColor={{ true: Colors.cwuRed }}
-          thumbColor={Platform.OS === "android" ? "#df2046" : ""}
-          value={isStaffParking}
-          onValueChange={newValue => setIsStaffParking(newValue)}
+          trackColor={{ true: Colors.cwuRed }} //Track color (when switch is tapped, track color shows when switch is on)
+          thumbColor={Platform.OS === "android" ? "#df2046" : ""} //Color of the switch itself
+          value={isStaffParking} //Initial value. The value it's currently at
+          onValueChange={newValue => setIsStaffParking(newValue)} //On tap, valuechange
         />
       </View>
       <View style={styles.filterContainer}>

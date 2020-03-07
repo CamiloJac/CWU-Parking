@@ -6,12 +6,14 @@ import Colors from "../constants/Colors";
 const LandingScreen = props => {
   return (
     <View style={styles.container}>
+      {/*Setting background image to the CWU logo with red opacity*/}
       <ImageBackground style={styles.imageBack} source={require("../assets/logoCWU.jpg")}>
         </ImageBackground>
       <View style={styles.topContainer}>
         <Text style={styles.h1}>CWU Parking</Text>
       </View>
       <View style={styles.middleContainer}>
+        {/*Legal statement*/}
         <Text style={styles.h2}>
           By accessing this application, you agree to assume the responsibilty
           to drive safely and to observe and obey all traffic laws.
@@ -22,8 +24,9 @@ const LandingScreen = props => {
           <TouchableOpacity
             style={styles.buttonStyle}
             onPress={() => {
+              //Props navigation call method of navigate to present the Map screen.
               props.navigation.navigate("Map");
-            }} //Set userDest to the variable defined beforehand
+            }}
             underlayColor={Colors.cwuRed}>
             <Text style={styles.buttonTextStyle}>
               I Agree

@@ -59,7 +59,7 @@ const MapScreen = props => {
 
   configureLots = (lot) => {
     if (window.isStaff === false) {
-      
+
     }
   }
 
@@ -156,7 +156,7 @@ const MapScreen = props => {
       //console.log("Check" + (count++)); //Watch setInterval checks
       if (numSpotsFreeArr[lotIndex] === 0) {
         const toast = Toast.showLoading("Redirecting...\nChosen lot full");
-        setTimeout(() => {
+        setTimeout(() => { //Causes toast to disappear after 2 seconds
           Toast.hide(toast);
         }, 2000);
         actualUserDest = redirection();
@@ -164,8 +164,8 @@ const MapScreen = props => {
       }
       getUserLocation();
       fetchLotData();
-    }, 5000);
-    return () => clearInterval(interval);
+    }, 1000); //Refresh all information after 1 second
+    return () => clearInterval(interval); //Returns the cleared interval to prevent stack overflow
   })
 
   return (
@@ -180,13 +180,12 @@ const MapScreen = props => {
         zoomEnabled={true}
         showsBuildings={true}
         showsCompass={true}
-        toolbarEnabled={true} //Doesn't seem to work
         loadingEnabled={true}
         loadingIndicatorColor={Colors.cwuRed}
         loadingBackgroundColor={Colors.cwuBlack}
       >
-        {parkingLotData.parkingLots.map(lot => (
-          <Polygon //Polygon is now just to show full parking lot area
+        {parkingLotData.parkingLots.map(lot => ( //lot.LOT_SHOW && makes sure the lot should be shown
+          lot.LOT_SHOW && <Polygon //Polygon is now just to show full parking lot area
             key={lot.LOT_ID}
             coordinates={lot.POLYGON_COORDINATES}
             strokeColor={Colors.cwuBlack}
@@ -195,9 +194,10 @@ const MapScreen = props => {
           />
         ))}
         {parkingLotData.parkingLots.map(lot => (
-          lot.LOT_SHOW && <Marker
+          lot.LOT_SHOW && <Marker //lot.LOT_SHOW && makes sure lot should be shown 
+            tracksInfoWindowChanges={true} //Updates information as change takes place (1-3 second delay)
             onPress={() => {
-              setSelectedLot(lot); 
+              setSelectedLot(lot);
               if (lot.LOT_ID === "H-15") { //Based on lot, toggle that information into modal.
                 setLotIndex(0); //Sets the lot index for pulling information (LOT_DESCRIPTION)
                 actualUserDest = toggleUserDest(lot); //Sets the variable actualUserDest to the return value of userDestUpdate
@@ -221,19 +221,19 @@ const MapScreen = props => {
             }}
             pinColor={lot.LOT_COLOR}
           >
-            {/*Parking Spaces Free doesn't constantly update. Future push?*/}
             <Callout tooltip
-              style={styles.calloutContainer}
               onPress={() => {
                 setUserDest(actualUserDest);
               }}>
-              <Text style={styles.textColor}>{lot.LOT_TYPE}</Text>
-              <Text style={styles.textColor}># Parking Spaces Free: {numSpotsFreeArr[lot.LOT_INDEX]}</Text>
-              <Text style={styles.dirStyle}>Directions</Text>
+              {/*Inner view lets Text components be separated if need be*/}
+              <View style={styles.calloutContainer}>
+                <Text style={styles.textColor}>{lot.LOT_TYPE}</Text>
+                <Text style={styles.textColor}># Parking Spaces Free: {numSpotsFreeArr[lot.LOT_INDEX]}</Text>
+                <Text style={styles.dirStyle}>Directions</Text>
+              </View>
             </Callout>
           </Marker>
         ))}
-        {/*TouchableOpacity as directions button on top of screen*/}
         <MapViewDirections
           origin={userOrigin}
           destination={userDest}
@@ -261,7 +261,7 @@ const MapScreen = props => {
         {/*Does not half the time. May need to adjust userDest update*/}
         <TouchableOpacity
           onPress={() => {
-            setUserDest(userOrigin);
+            setUserDest(userOrigin); //Janky bypass that sets user dest to user location which clears directions.
           }}
         >
           <Text style={styles.clearDir}>
@@ -315,10 +315,11 @@ const styles = StyleSheet.create({
   },
   dirStyle: {
     fontSize: 22,
+    fontWeight: "bold",
     color: Colors.cwuRed,
     backgroundColor: "white",
     borderColor: Colors.cwuBlack,
-    borderWidth: 4,
+    borderWidth: 6,
     borderRadius: 8
   },
   textColor: {
@@ -347,7 +348,7 @@ const styles = StyleSheet.create({
   },
   switchStyle: {
     flex: 1,
-    bottom: dHeight * 0.85,
+    bottom: dHeight * 0.83,
     backgroundColor: Colors.cwuBlack,
     justifyContent: "center",
     alignItems: "flex-end",
