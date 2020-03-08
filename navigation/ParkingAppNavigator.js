@@ -1,5 +1,4 @@
 import React from "react";
-import { View, Text, Platform, SafeAreaView } from "react-native";
 import { createAppContainer } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
 import { createDrawerNavigator, DrawerItems } from "react-navigation-drawer";
