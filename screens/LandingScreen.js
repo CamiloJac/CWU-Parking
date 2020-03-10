@@ -10,7 +10,7 @@ const LandingScreen = props => {
       <ImageBackground style={styles.imageBack} source={require("../assets/logoCWU.jpg")}>
         </ImageBackground>
       <View style={styles.topContainer}>
-        <Text style={styles.h1}>CWU Parking</Text>
+        <Text style={styles.h1}>Legal Agreement</Text>
       </View>
       <View style={styles.middleContainer}>
         {/*Legal statement*/}
@@ -39,7 +39,7 @@ const LandingScreen = props => {
 };
 
 LandingScreen.navigationOptions = {
-  headerTitle: "Legal Agreement",
+  headerTitle: "CWU Parking Application",
   headerStyle: {
     backgroundColor: Colors.cwuRed
   },
@@ -73,7 +73,8 @@ const styles = StyleSheet.create({
     marginTop: 8
   },
   topContainer: {
-    marginBottom: 50
+    marginBottom: 50,
+    fontWeight: "bold"
   },
   bottomContainer: {
     justifyContent: "center",
