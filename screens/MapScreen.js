@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, Platform, Dimensions, TouchableOpacity, Switch, useWindowDimensions } from "react-native";
+import { View, Text, StyleSheet, Platform, Dimensions, TouchableOpacity, Switch } from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import MapView, { Marker, Callout, Polygon, PROVIDER_GOOGLE } from "react-native-maps";
 import MapViewDirections from "react-native-maps-directions";
@@ -14,7 +14,6 @@ import * as parkingLotData from "../data/parking-lot-data";
 const GOOGLE_MAPS_APIKEY = 'AIzaSyAZGYpEfZsVOpAfgsobGlk9lSIQQ8fw1aw';
 
 const dHeight = Dimensions.get("window").height;
-const dWidth = Dimensions.get("window").width;
 
 //Variables: lat and long delta as variables to not change in this case
 var LATITUDE_DELTA = 0.0922,
@@ -63,13 +62,6 @@ const MapScreen = props => {
     }
   }
 
-  //Feeding false information to Firebase for testing usages starting here
-  /*feedFalseData = () => {
-    var ranNum = Math.floor((Math.random() * 51));
-    let lotRef = fire.database().ref("parkingLots/");
-    lotRef.child("lot4").update({'SPOTS_TAKEN': ranNum});
-  }*/
-  //False information feeding end
   //Firebase data handling start
   const sleep = (ms) => {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -229,7 +221,9 @@ const MapScreen = props => {
               <View style={styles.calloutContainer}>
                 <Text style={styles.textColor}>{lot.LOT_TYPE}</Text>
                 <Text style={styles.textColor}># Parking Spaces Free: {numSpotsFreeArr[lot.LOT_INDEX]}</Text>
-                <Text style={styles.dirStyle}>Directions</Text>
+                <TouchableOpacity style={styles.dirStyle}>
+                    <Text style={{ color: "white", fontSize: 22, fontWeight: "bold" }}>Directions</Text>
+                </TouchableOpacity>
               </View>
             </Callout>
           </Marker>
@@ -314,11 +308,8 @@ const styles = StyleSheet.create({
     flexDirection: "column",
   },
   dirStyle: {
-    fontSize: 22,
-    fontWeight: "bold",
-    color: Colors.cwuRed,
-    backgroundColor: "white",
-    borderColor: Colors.cwuBlack,
+    backgroundColor: Colors.cwuRed,
+    borderColor: Colors.cwuRed,
     borderWidth: 6,
     borderRadius: 8
   },
@@ -363,11 +354,12 @@ const styles = StyleSheet.create({
   clearDir: {
     color: "white",
     marginLeft: 25,
+    textAlign: "center",
     padding: 6,
-    backgroundColor: Colors.cwuBlack,
+    backgroundColor: Colors.cwuRed,
     borderRadius: 12,
-    borderWidth: 2,
-    borderColor: Colors.cwuRed,
+    borderWidth: 4,
+    borderColor: Colors.cwuBlack,
   }
 });
 

@@ -3,11 +3,9 @@ import {
   View,
   Text,
   StyleSheet,
-  Button,
-  TouchableOpacity,
   Switch,
   Platform,
-  AsyncStorage
+  ImageBackground
 } from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import HeaderButton from "../components/HeaderButton";
@@ -55,6 +53,9 @@ const SettingsScreen = props => {
 
   return (
     <View style={styles.screen}>
+      {/*Setting background image to the CWU logo with red opacity*/}
+      <ImageBackground style={styles.imageBack} source={require("../assets/logoCWU.jpg")}>
+        </ImageBackground>
       <Text style={styles.title}>Filters</Text>
       <View style={styles.filterContainer}>
         <Text style={styles.screenText}>Staff Parking</Text>
@@ -115,6 +116,11 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     alignItems: "center"
+  },
+  imageBack: {
+    flex: 1,
+    ...StyleSheet.absoluteFillObject,
+    opacity: 0.3,
   },
   filterContainer: {
     flexDirection: "row",
