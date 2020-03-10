@@ -1,8 +1,5 @@
-import React from "react";
 import { createAppContainer } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
-import { createDrawerNavigator, DrawerItems } from "react-navigation-drawer";
-import { Ionicons } from "@expo/vector-icons";
 
 import LandingScreen from '../screens/LandingScreen';
 import MapScreen from '../screens/MapScreen';
