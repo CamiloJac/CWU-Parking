@@ -7,7 +7,8 @@ import {
   TouchableOpacity,
   Switch,
   Platform,
-  AsyncStorage
+  AsyncStorage,
+  ImageBackground
 } from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import HeaderButton from "../components/HeaderButton";
@@ -55,7 +56,9 @@ const SettingsScreen = props => {
 
   return (
     <View style={styles.screen}>
-      <Text style={styles.title}>Filters</Text>
+      <ImageBackground style={styles.imageBack} source={require("../assets/logoCWU.jpg")}>
+      </ImageBackground>
+      <Text style={styles.title}>Parking Lot Type</Text>
       <View style={styles.filterContainer}>
         <Text style={styles.screenText}>Staff Parking</Text>
         <Switch
@@ -101,8 +104,6 @@ SettingsScreen.navigationOptions = navData => {
     headerRight: () => (
       <HeaderButtons HeaderButtonComponent={HeaderButton}>
         <Item
-          forceInset={{ top: 'always', horizontal: 'never' }}
-          title="Close"
           iconName={Platform.OS === "android" ? "md-arrow-back" : "ios-arrow-back"}
           onPress={() => { navData.navigation.navigate("Map"); }}
         />
@@ -115,6 +116,11 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     alignItems: "center"
+  },
+  imageBack: {
+    flex: 1,
+    ...StyleSheet.absoluteFillObject,
+    opacity: 0.3,
   },
   filterContainer: {
     flexDirection: "row",
