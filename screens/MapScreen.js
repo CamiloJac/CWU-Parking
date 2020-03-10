@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, Platform, Dimensions, TouchableOpacity, Switch, useWindowDimensions } from "react-native";
+import { View, Text, StyleSheet, Platform, Dimensions, TouchableOpacity, Switch, /*useWindowDimensions*/ } from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import MapView, { Marker, Callout, Polygon, PROVIDER_GOOGLE } from "react-native-maps";
 import MapViewDirections from "react-native-maps-directions";
@@ -18,7 +18,7 @@ const dWidth = Dimensions.get("window").width;
 
 //Variables: lat and long delta as variables to not change in this case
 var LATITUDE_DELTA = 0.0922,
-  LONGITUDE_DELTA = 0.0421;
+	LONGITUDE_DELTA = 0.0421;
 
 //Other variables (for geolocation.watchPosition)
 var actualUserDest,
@@ -70,13 +70,14 @@ const MapScreen = props => {
     lotRef.child("lot4").update({'SPOTS_TAKEN': ranNum});
   }*/
   //False information feeding end
+
   //Firebase data handling start
   const sleep = (ms) => {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   /**
-   * Grab data from firebase and fill up the numSpotsFreeArr.
+   * Query data from firebase and fill up the numSpotsFreeArr.
    */
   fetchLotData = () => {
     fire.database().ref("parkingLots/").on("value", snapshot => {
@@ -88,7 +89,7 @@ const MapScreen = props => {
       }
     })
   };
-  //Firebase data handling end
+  //Firebase data query end
 
   /**
    * Grab user location using getCurrentPosition to avoid stack overflow of calls.
@@ -104,7 +105,7 @@ const MapScreen = props => {
 
   getUserLocation();
 
-  //This updates users destination
+  //Updates users destination
   function toggleUserDest(lot) {
     return (lot.PIN_COORDINATES[0] + "," + lot.PIN_COORDINATES[1]);
   }
@@ -194,11 +195,11 @@ const MapScreen = props => {
           />
         ))}
         {parkingLotData.parkingLots.map(lot => (
-          lot.LOT_SHOW && <Marker //lot.LOT_SHOW && makes sure lot should be shown 
+          lot.LOT_SHOW && <Marker //lot.LOT_SHOW && makes sure lot should be shown based on filters
             tracksInfoWindowChanges={true} //Updates information as change takes place (1-3 second delay)
             onPress={() => {
               setSelectedLot(lot);
-              if (lot.LOT_ID === "H-15") { //Based on lot, toggle that information into modal.
+			  if (lot.LOT_ID === "H-15") { //Based on lot, toggle that information into modal.
                 setLotIndex(0); //Sets the lot index for pulling information (LOT_DESCRIPTION)
                 actualUserDest = toggleUserDest(lot); //Sets the variable actualUserDest to the return value of userDestUpdate
               } else if (lot.LOT_ID === "G-15") {
@@ -211,7 +212,7 @@ const MapScreen = props => {
                 setLotIndex(3);
                 actualUserDest = toggleUserDest(lot);
               } else {
-                console.log("Lot doth not existeth");
+                console.log("Lot does not exist.");
               }
             }}
             key={lot.LOT_ID}
@@ -229,7 +230,13 @@ const MapScreen = props => {
               <View style={styles.calloutContainer}>
                 <Text style={styles.textColor}>{lot.LOT_TYPE}</Text>
                 <Text style={styles.textColor}># Parking Spaces Free: {numSpotsFreeArr[lot.LOT_INDEX]}</Text>
-                <Text style={styles.dirStyle}>Directions</Text>
+                  <TouchableOpacity 
+                    style={styles.buttonStyle}
+                    underlayColor={Colors.cwuRed}>
+                  <Text style={styles.buttonTextStyle}>
+                    Directions
+                  </Text>
+                  </TouchableOpacity>
               </View>
             </Callout>
           </Marker>
@@ -247,8 +254,8 @@ const MapScreen = props => {
         />
       </MapView>
       { /*Split the mapview to only items for the map and view for touchable opacity set
-            allows for the below items to have an absolute position and not change in relation
-            to other objects, e.g. the items in MapView*/}
+        allows for the below items to have an absolute position and not change in relation
+        to other objects, e.g. the items in MapView*/}
       <View style={styles.switchStyle}>
         <Text style={styles.switchText}> {trueFalseUM ? "Walking" : "Driving"} </Text>
         <Switch
@@ -259,12 +266,14 @@ const MapScreen = props => {
           onValueChange={newValue => toggleMode(newValue)}
         />
         {/*Does not half the time. May need to adjust userDest update*/}
-        <TouchableOpacity
+        <TouchableOpacity 
+          style={styles.buttonStyle}
           onPress={() => {
             setUserDest(userOrigin); //Janky bypass that sets user dest to user location which clears directions.
           }}
-        >
-          <Text style={styles.clearDir}>
+          underlayColor="Colors.cwuRed">
+            
+          <Text style={styles.buttonTextStyle}>
             Clear Directions
           </Text>
         </TouchableOpacity>
@@ -313,17 +322,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "column",
   },
-  dirStyle: {
-    fontSize: 22,
-    fontWeight: "bold",
-    color: Colors.cwuRed,
-    backgroundColor: "white",
-    borderColor: Colors.cwuBlack,
-    borderWidth: 6,
-    borderRadius: 8
-  },
   textColor: {
     fontSize: 18,
+    fontWeight: "bold",
     color: Colors.cwuRed,
   },
   buttonStyle: {
@@ -341,14 +342,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     color: "white",
   },
-  headerText: {
-    color: "white",
-    textAlign: "center",
-    fontSize: 18
-  },
   switchStyle: {
     flex: 1,
-    bottom: dHeight * 0.83,
+    bottom: dHeight *.836,
     backgroundColor: Colors.cwuBlack,
     justifyContent: "center",
     alignItems: "flex-end",
