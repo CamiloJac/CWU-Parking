@@ -1,0 +1,15 @@
+# The following is the text used to create a crontab job on the
+# remote Ubuntu server once configured.
+#
+# In order to create the job:
+# enter "crontab -e" to open crontab file (it will automatically open in the default text editor)
+# Paste the below conmmand into the text editor after the printed instructions
+# This job will run at the 30th minute of every hour, but can be altered
+# using the https://crontab.guru/ available online to the user's liking.
+# Once the command is pasted, save the file.
+# Create the logs/ folder as a child of the Python scripts folder, and
+# inside of that, create a logs.txt file to send log messages to.
+# This will assist in debugging the cron job and ensure that the information
+# is being correctly inserted into the database. 
+
+*/30 * * * * cd /home/taxi/ParkingApp; python db.py >> logs/log.txt; echo 'Success!' >> logs/log.txt
